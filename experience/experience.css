@@ -1,0 +1,154 @@
+/* ==========================================================================
+   Bee Innovations — 3D Experience
+   Standalone stylesheet for the isolated Three.js demo page.
+   Not linked from, and does not affect, assets/css/styles.css.
+   ========================================================================== */
+
+/* Colors copied exactly from the main site's :root (assets/css/styles.css)
+   — do not invent new ones here, keep this list in sync with that file. */
+:root {
+  --experience-bg: #fbfbfd;
+  --experience-fg: #14142b;
+  --experience-muted: #4b4f5c;
+  --experience-border: #eef0f5;
+  --experience-accent: #3b82f6;
+  --experience-accent-dark: #2563c7;
+  --experience-primary: #ec4899;
+  --experience-lime: #a3e635;
+  --experience-orange: #fb923c;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--experience-bg);
+  color: var(--experience-fg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* Full-viewport canvas that Three.js renders into */
+#experience-canvas {
+  position: fixed;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* Canvas sits behind the HTML overlay UI */
+  z-index: 1;
+  cursor: grab;
+}
+
+#experience-canvas:active {
+  cursor: grabbing;
+}
+
+/* Sequence controls: pause/resume and replay */
+.experience-controls {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: max(4vh, 1.5rem);
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.experience-btn {
+  pointer-events: auto;
+  appearance: none;
+  border: 1px solid var(--experience-border);
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(6px);
+  color: var(--experience-fg);
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.7rem 1.3rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: border-color 0.25s ease, background 0.25s ease, transform 0.15s ease;
+}
+
+.experience-btn:hover,
+.experience-btn:focus-visible {
+  border-color: var(--experience-accent);
+  background: rgba(59, 130, 246, 0.12);
+}
+
+.experience-btn:active {
+  transform: scale(0.96);
+}
+
+/* Brand reveal — the only appearance of the Bee Innovations name, faded in
+   only as the finale camera rises. Hidden (opacity 0) the rest of the time. */
+.experience-brand {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  /* A "curtain" that fades in with the text — fully opaque by the time the
+     brand is centered, so the finished phrase clearly finishes and settles
+     before "BEE Innovations for Education" appears, rather than the two
+     ever reading as simultaneous/competing text. */
+  background: radial-gradient(circle at 50% 45%, rgba(251, 251, 253, 0.9) 0%, rgba(251, 251, 253, 1) 65%);
+}
+
+.experience-brand.is-leaving {
+  transition: opacity 0.6s ease;
+  opacity: 0 !important;
+}
+
+.experience-brand-mark {
+  font-size: clamp(2.2rem, 7vw, 4rem);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--experience-fg);
+}
+
+.experience-brand-name {
+  font-size: clamp(0.75rem, 1.8vw, 1rem);
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--experience-accent);
+}
+
+/* Small hint shown while the scene loads */
+.experience-loading {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--experience-bg);
+  color: var(--experience-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+}
+
+.experience-loading.is-hidden {
+  opacity: 0;
+}

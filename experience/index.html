@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Experience | Bee Innovations</title>
+  <meta name="description" content="An isolated Three.js 3D experience for Bee Innovations." />
+  <link rel="stylesheet" href="experience.css" />
+
+  <!--
+    Import map: lets browser-native ES modules resolve the bare specifier
+    "three" (and the examples/addons path) without a bundler.
+    Version is pinned to an exact release so the page never silently
+    breaks on a Three.js update.
+  -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.186.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <!-- Three.js renders into this canvas -->
+  <canvas id="experience-canvas"></canvas>
+
+  <!--
+    No opening heading here on purpose — the phrase built by the machines
+    ("CREATE WHAT YOU IMAGINE") is the hero. The Bee Innovations brand only
+    appears once, in #experience-brand, as the finale rises into it.
+  -->
+
+  <!-- Sequence controls: pause/resume and replay -->
+  <div class="experience-controls">
+    <button type="button" id="experience-pause-btn" class="experience-btn" aria-pressed="false">Pause</button>
+    <button type="button" id="experience-replay-btn" class="experience-btn">Replay</button>
+  </div>
+
+  <!-- Brand reveal: fades in only during the finale camera rise -->
+  <div class="experience-brand" id="experience-brand">
+    <span class="experience-brand-mark">BEE</span>
+    <span class="experience-brand-name">Innovations for Education</span>
+  </div>
+
+  <div class="experience-loading" id="experience-loading">Loading experience…</div>
+
+  <script type="module" src="experience.js"></script>
+</body>
+</html>
