@@ -1,7 +1,7 @@
 /* Bee Innovations — shared styles */
 /* Palette: Candy Lab — electric blue, hot pink, lime, sun orange on white. Pink is reserved for the primary action. */
 
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Karla:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&family=Caveat:wght@600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Karla:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&family=Caveat:wght@600;700&family=Fraunces:ital,wght@1,500&display=swap');
 
 :root {
   --bg: #ffffff;
@@ -23,6 +23,7 @@
   --font-body: 'Karla', sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
   --font-accent: 'Caveat', cursive;
+  --font-serif-italic: 'Fraunces', serif;
   --container-w: 1280px;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
@@ -237,29 +238,34 @@ p { margin: 0 0 1em; color: var(--text-muted); }
   text-underline-offset: 4px;
 }
 
-/* Hero accent word — a rotated "highlighter" block behind one word, so the
-   "Create what you imagine" heroes read as designed rather than just an
-   underlined word. Color set per page via a modifier. */
-.hero-accent {
-  position: relative;
-  display: inline-block;
-  white-space: nowrap;
+/* Bold "blocked" hero headline: a heavy uppercase dark line, a heavy
+   uppercase accent-color line, closing in a smaller italic serif word.
+   Used on both the homepage and Why Bee Innovations heroes. */
+h1.hero-headline {
+  font-family: var(--font-head);
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  font-size: clamp(2.5rem, 7vw, 5.2rem);
+  max-width: none;
+  margin: 0 0 0.5em;
 }
 
-.hero-accent::before {
-  content: '';
-  position: absolute;
-  left: -0.07em;
-  right: -0.07em;
-  bottom: 0.06em;
-  height: 0.32em;
-  z-index: -1;
-  border-radius: 3px;
-  transform: rotate(-1.6deg);
-}
+.hero-headline .line { display: block; }
+.hero-headline .line-dark { color: var(--text); }
+.hero-headline .line-accent { color: var(--accent); }
 
-.hero-accent-pink::before { background: rgba(236, 72, 153, 0.3); }
-.hero-accent-blue::before { background: rgba(59, 130, 246, 0.28); }
+.hero-headline .accent-italic {
+  font-family: var(--font-serif-italic);
+  font-style: italic;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
+  font-size: 0.52em;
+  color: var(--orange-dark);
+  margin-left: 0.14em;
+}
 
 .hero-spark {
   display: inline-block;
@@ -274,6 +280,43 @@ p { margin: 0 0 1em; color: var(--text-muted); }
 }
 
 .hero .button-group { justify-content: center; }
+
+/* Two-column variant: copy on the left, the Maker's Desk illustration on
+   the right. Scoped to this modifier (not the base .hero) so 404.html's
+   plain centered hero is untouched. */
+.hero.hero-split .container {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 2.5rem;
+  align-items: center;
+  text-align: left;
+}
+
+.hero.hero-split p.lead { margin: 0 0 1rem; }
+.hero.hero-split .button-group { justify-content: flex-start; }
+
+.hero-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-art svg,
+.hero-art video {
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+  border-radius: var(--radius);
+}
+
+@media (max-width: 860px) {
+  .hero.hero-split .container { grid-template-columns: 1fr; text-align: center; }
+  .hero.hero-split p.lead { margin-left: auto; margin-right: auto; }
+  .hero.hero-split .button-group { justify-content: center; }
+  .hero-art { order: -1; }
+  .hero-art svg,
+  .hero-art video { max-width: 240px; }
+}
 
 .page-hero {
   padding: 4.5rem 0 3rem;
