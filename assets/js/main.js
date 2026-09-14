@@ -91,12 +91,11 @@ function initSearch(rootPrefix) {
   trigger.type = 'button';
   trigger.className = 'search-trigger';
   trigger.setAttribute('aria-label', 'Search the site');
-  trigger.innerHTML = '&#128269;';
+  trigger.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="6"></circle><line x1="13.2" y1="13.2" x2="18" y2="18"></line></svg>';
   navWrap.insertBefore(trigger, navToggle);
 
   const overlay = document.createElement('div');
   overlay.className = 'search-overlay';
-  overlay.hidden = true;
   overlay.innerHTML = `
     <div class="search-modal" role="dialog" aria-modal="true" aria-label="Site search">
       <input type="text" placeholder="Search the site..." aria-label="Search query">
@@ -131,22 +130,24 @@ function initSearch(rootPrefix) {
     `).join('');
   };
 
+  const isOpen = () => overlay.classList.contains('is-open');
+
   const open = () => {
-    overlay.hidden = false;
+    overlay.classList.add('is-open');
     input.value = '';
     render('');
     input.focus();
   };
 
   const close = () => {
-    overlay.hidden = true;
+    overlay.classList.remove('is-open');
   };
 
   trigger.addEventListener('click', open);
   overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !overlay.hidden) close();
-    if ((e.key === '/' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) && overlay.hidden && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    if (e.key === 'Escape' && isOpen()) close();
+    if ((e.key === '/' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) && !isOpen() && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
       e.preventDefault();
       open();
     }
