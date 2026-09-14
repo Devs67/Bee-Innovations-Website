@@ -63,9 +63,14 @@ body {
   pointer-events: none;
 }
 
+/* Shared by <button> controls and the <a> "Skip intro" link, so all three
+   pills in .experience-controls look and behave identically. */
 .experience-btn {
+  display: inline-flex;
+  align-items: center;
   pointer-events: auto;
   appearance: none;
+  text-decoration: none;
   border: 1px solid var(--experience-border);
   background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(6px);

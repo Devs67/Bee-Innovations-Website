@@ -236,6 +236,36 @@ p { margin: 0 0 1em; color: var(--text-muted); }
   text-underline-offset: 4px;
 }
 
+/* Hero accent word — a rotated "highlighter" block behind one word, so the
+   "Create what you imagine" heroes read as designed rather than just an
+   underlined word. Color set per page via a modifier. */
+.hero-accent {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.hero-accent::before {
+  content: '';
+  position: absolute;
+  left: -0.07em;
+  right: -0.07em;
+  bottom: 0.06em;
+  height: 0.32em;
+  z-index: -1;
+  border-radius: 3px;
+  transform: rotate(-1.6deg);
+}
+
+.hero-accent-pink::before { background: rgba(236, 72, 153, 0.3); }
+.hero-accent-blue::before { background: rgba(59, 130, 246, 0.28); }
+
+.hero-spark {
+  display: inline-block;
+  color: var(--primary);
+  margin-right: 0.55em;
+}
+
 .hero p.lead {
   max-width: 720px;
   margin: 0 auto 1rem;
@@ -248,6 +278,10 @@ p { margin: 0 0 1em; color: var(--text-muted); }
   padding: 4.5rem 0 3rem;
   text-align: left;
 }
+
+/* Used on pages where the section right after the hero needs to sit closer
+   underneath it instead of stacking two large paddings into dead space. */
+.page-hero-tight { padding-bottom: 1.25rem; }
 
 .page-hero p.lead {
   max-width: 700px;
@@ -276,6 +310,67 @@ p { margin: 0 0 1em; color: var(--text-muted); }
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+}
+
+/* "We are the zero" layout: the case-for-the-metaphor text beside a small
+   graphic of it, instead of a paragraph that just links out. */
+.zero-layout {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.zero-layout .section-head { max-width: none; margin-bottom: 0; }
+
+@media (max-width: 860px) {
+  .zero-layout { grid-template-columns: 1fr; }
+}
+
+.zero-graphic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.zero-graphic .zg-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.zero-graphic .zg-zero {
+  border: 2px dashed var(--primary);
+  color: var(--primary-dark);
+  background: rgba(236, 72, 153, 0.08);
+}
+
+.zero-graphic .zg-one {
+  background: var(--border);
+  color: var(--text);
+}
+
+.zero-graphic .zg-ten {
+  width: 74px;
+  height: 74px;
+  font-size: 1.25rem;
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.zero-graphic .zg-op {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--text-muted);
 }
 
 /* Card grid */
@@ -362,6 +457,8 @@ p { margin: 0 0 1em; color: var(--text-muted); }
   margin-bottom: 1.25rem;
 }
 
+.hex-badge svg { width: 26px; height: 26px; }
+
 /* Callout / placeholder box */
 
 .callout {
@@ -412,6 +509,73 @@ p { margin: 0 0 1em; color: var(--text-muted); }
 
 .prose { max-width: 720px; }
 
+/* Pairs the prose column with a sticky illustration/stat aside on wide
+   screens, so a long-form page doesn't leave the right half of the screen
+   empty. Falls back to a single column on narrow viewports. */
+.prose-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 720px) 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.prose-layout .prose { max-width: none; }
+
+.prose-aside {
+  position: sticky;
+  top: 96px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+@media (max-width: 960px) {
+  .prose-layout { grid-template-columns: 1fr; }
+  .prose-aside { position: static; }
+}
+
+.bridge-motif {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-alt);
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.bridge-motif svg { width: 100%; max-width: 220px; height: auto; }
+
+.bridge-motif p {
+  margin: 1.1rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.pull-stat {
+  border-radius: var(--radius);
+  background: var(--text);
+  color: #ffffff;
+  padding: 2rem 1.75rem;
+}
+
+.pull-stat .pull-stat-number {
+  display: block;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--lime);
+  margin-bottom: 0.5rem;
+}
+
+.pull-stat p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.92rem;
+}
+
 .prose h2 {
   margin-top: 2.2em;
   font-size: 1.5rem;
@@ -435,12 +599,16 @@ p { margin: 0 0 1em; color: var(--text-muted); }
 
 /* Prose headings + key-phrase highlights */
 
-.prose h2.h-blue { color: var(--accent-dark); }
-.prose h2.h-pink { color: var(--primary-dark); }
-.prose h2.h-lime { color: var(--lime-dark); }
-.prose h2.h-orange { color: var(--orange-dark); }
+/* Not scoped to .prose — used on regular section h2s too, so headings pick
+   up brand color instead of defaulting to flat near-black everywhere. */
+.h-blue { color: var(--accent-dark); }
+.h-pink { color: var(--primary-dark); }
+.h-lime { color: var(--lime-dark); }
+.h-orange { color: var(--orange-dark); }
 
-.kw { font-weight: 700; }
+/* Key phrases render in the heading font, not just bold+color, so
+   emphasized words read as a deliberate typographic shift. */
+.kw { font-family: var(--font-head); font-weight: 700; }
 .kw-blue { color: var(--accent-dark); }
 .kw-pink { color: var(--primary-dark); }
 .kw-lime { color: var(--lime-dark); }
@@ -1093,6 +1261,107 @@ body {
   margin: 0 auto 1.25rem;
 }
 
+/* Launch gate — first-visit-only dark "galaxy" splash shown before the 3D
+   intro on the homepage. Hidden by default; an inline script in index.html
+   reveals it (before first paint) only if the visitor hasn't launched yet. */
+
+.launch-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 22%, rgba(59, 130, 246, 0.28), transparent 45%),
+    radial-gradient(circle at 82% 78%, rgba(236, 72, 153, 0.24), transparent 45%),
+    radial-gradient(ellipse at 50% 50%, #1b1b3a 0%, #0a0a18 68%, #050508 100%);
+}
+
+.launch-gate[hidden] { display: none; }
+
+.launch-gate::before {
+  content: '';
+  position: absolute;
+  inset: -10%;
+  background-image:
+    radial-gradient(1.5px 1.5px at 10% 20%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1.5px 1.5px at 30% 70%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 50% 30%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1.5px 1.5px at 70% 82%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 85% 15%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1.5px 1.5px at 92% 55%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1px 1px at 15% 88%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1.5px 1.5px at 60% 8%, rgba(255, 255, 255, 0.6), transparent);
+  background-size: 220px 220px;
+  animation: launch-twinkle 6s ease-in-out infinite;
+}
+
+@keyframes launch-twinkle {
+  0%, 100% { opacity: 0.65; }
+  50% { opacity: 1; }
+}
+
+.launch-gate-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 0 24px;
+}
+
+.launch-gate-eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--lime);
+  margin-bottom: 1.1rem;
+}
+
+.launch-gate-title {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: clamp(1.7rem, 4.6vw, 2.9rem);
+  line-height: 1.25;
+  color: #ffffff;
+  margin: 0 0 2.2rem;
+}
+
+.launch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 1em 2.4em;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: linear-gradient(120deg, var(--lime), var(--accent) 75%);
+  animation: launch-pulse 2.4s ease-in-out infinite;
+  transition: transform 160ms var(--ease-out);
+}
+
+.launch-btn:hover { transform: translateY(-2px) scale(1.02); }
+.launch-btn:active { transform: scale(0.97); }
+
+@keyframes launch-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(163, 230, 53, 0.35); }
+  70% { box-shadow: 0 0 0 18px rgba(163, 230, 53, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(163, 230, 53, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .launch-gate::before { animation: none; }
+  .launch-btn { animation: none; }
+}
+
 /* Print */
 
 @media print {
@@ -1101,6 +1370,7 @@ body {
   .fab-stack,
   .scroll-progress,
   .search-overlay,
+  .launch-gate,
   .cta-band .button-group,
   .hero .button-group,
   .page-hero + .section .button-group {

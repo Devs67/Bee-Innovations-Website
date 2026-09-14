@@ -9,6 +9,30 @@
 </head>
 <body>
 
+<!-- Launch gate: hidden by default, revealed only for a first-time visitor
+     (checked synchronously below, before the rest of the page paints, so
+     there's no flash either way). Clicking Launch plays the 3D intro at
+     experience/index.html, which hands back to this page afterward. -->
+<div class="launch-gate" id="launchGate" hidden>
+  <div class="launch-gate-content">
+    <span class="launch-gate-eyebrow">Bee Innovations</span>
+    <h2 class="launch-gate-title">Ready to see an idea<br>become something real?</h2>
+    <button type="button" class="launch-btn" id="launchBtn">Launch →</button>
+  </div>
+</div>
+<script>
+  (function () {
+    if (!localStorage.getItem('beeLaunched')) {
+      document.getElementById('launchGate').hidden = false;
+      document.documentElement.style.overflow = 'hidden';
+    }
+    document.getElementById('launchBtn').addEventListener('click', function () {
+      localStorage.setItem('beeLaunched', '1');
+      window.location.href = 'experience/index.html';
+    });
+  })();
+</script>
+
 <header class="site-header">
   <div class="nav-wrap container">
     <a class="brand" href="index.html"><span class="brand-mark"></span>Bee Innovations</a>
@@ -17,6 +41,7 @@
     </button>
     <nav class="site-nav">
       <a href="index.html" class="active">Home</a>
+      <a href="experience/index.html">3D Experience</a>
       <a href="what-we-do/index.html">What We Do</a>
       <a href="curriculum/index.html">Curriculum</a>
       <a href="why-bee-innovations/index.html">Why Bee Innovations</a>
@@ -28,8 +53,8 @@
 
 <section class="hero">
   <div class="container">
-    <span class="eyebrow">STEM Curriculum & Lab Setup for Schools</span>
-    <h1>Create what you <span class="u-lime">imagine.</span></h1>
+    <span class="eyebrow"><span class="hero-spark">✦</span>STEM Curriculum & Lab Setup for Schools</span>
+    <h1>Create what<br>you <span class="hero-accent hero-accent-pink">imagine</span>.</h1>
     <p class="lead">Bee Innovations gives schools the curriculum, the lab, and the trained teacher to turn every child's imagination into something they can actually build.</p>
     <div class="button-group">
       <a class="button button-solid" href="for-schools/partner-with-us.html">Partner With Us</a>
@@ -48,23 +73,29 @@
   <div class="container">
     <div class="section-head center">
       <span class="eyebrow">What We Do</span>
-      <h2>Three things, working together</h2>
+      <h2 class="h-blue">Three things, working together</h2>
     </div>
     <div class="card-grid">
-      <div class="card">
-        <div class="hex-badge">◆</div>
+      <div class="card accent-blue">
+        <div class="hex-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5A1.5 1.5 0 0 1 4 18.5V5.5Z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5a1.5 1.5 0 0 0 1.5-1.5V5.5Z"/><path d="M12 4v16"/></svg>
+        </div>
         <h3>Curriculum & Content</h3>
         <p>A grade-by-grade skill ladder, Grades 1–9, delivered as ready-to-teach video and lesson content.</p>
         <a class="card-link" href="what-we-do/curriculum-content.html">Learn more →</a>
       </div>
-      <div class="card">
-        <div class="hex-badge">◆</div>
+      <div class="card accent-lime">
+        <div class="hex-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.3 2.3-2-2 2.3-2.3Z"/></svg>
+        </div>
         <h3>Lab & Makerspace Setup</h3>
         <p>From a single robotics corner to a full makerspace — equipment, layout, and setup, done for you.</p>
         <a class="card-link" href="what-we-do/lab-makerspace-setup.html">Learn more →</a>
       </div>
-      <div class="card">
-        <div class="hex-badge">◆</div>
+      <div class="card accent-orange">
+        <div class="hex-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8.5" cy="7.5" r="2.5"/><path d="M3 19c0-2.8 2.5-5 5.5-5S14 16.2 14 19"/><circle cx="17" cy="8" r="2"/><path d="M15.5 13.2c2.1.4 3.5 2.1 3.5 4.3"/></svg>
+        </div>
         <h3>Teacher Training & Support</h3>
         <p>We train your own teacher to run sessions day-to-day, and visit regularly to coach and troubleshoot.</p>
         <a class="card-link" href="curriculum/teacher-training-support.html">Learn more →</a>
@@ -78,7 +109,7 @@
   <div class="container">
     <div class="section-head">
       <span class="eyebrow">Curriculum</span>
-      <h2>Grades 1–9. One skill ladder. Three stages.</h2>
+      <h2 class="h-orange">Grades 1–9. One skill ladder. Three stages.</h2>
     </div>
     <div class="flow-row">
       <span class="flow-step">Explore (Grades 1–3)</span>
@@ -96,9 +127,20 @@
   <div class="container">
     <div class="section-head">
       <span class="eyebrow">Why Bee Innovations</span>
-      <h2>We are the zero.</h2>
-      <p>Zero, on its own, has no value. Stand it next to a 1, and that 1 becomes a 10. That's the role we've chosen: not to hand a child their imagination, but to multiply it.</p>
-      <a class="card-link" href="why-bee-innovations/index.html#philosophy">Read our philosophy →</a>
+      <h2 class="h-pink">We are the zero.</h2>
+    </div>
+    <div class="zero-layout">
+      <div>
+        <p>Zero, on its own, has no value. Stand it next to a <span class="kw-mono">1</span>, and that <span class="kw-mono">1</span> becomes a <span class="kw-mono">10</span>. That's the role we've chosen: every child who walks through our door already carries their own imagination and curiosity — we didn't put that there. What we do is stand beside it, the way a zero stands beside a number, and <span class="kw kw-pink">multiply</span> it. Our job was never to hand a child their imagination. It's to build the <span class="kw kw-pink">bridge</span> from that imagination to something they can actually hold, show, and improve.</p>
+        <p><a href="why-bee-innovations/index.html">Read the full philosophy and our story →</a></p>
+      </div>
+      <div class="zero-graphic" aria-hidden="true">
+        <div class="zg-num zg-zero">0</div>
+        <span class="zg-op">+</span>
+        <div class="zg-num zg-one">1</div>
+        <span class="zg-op">=</span>
+        <div class="zg-num zg-ten">10</div>
+      </div>
     </div>
   </div>
 </section>
@@ -106,7 +148,7 @@
 <section class="trust-strip">
   <div class="container">
     <span class="eyebrow">Where We Work</span>
-    <h2>Working with schools across the Hyderabad region.</h2>
+    <h2 class="h-lime">Working with schools across the Hyderabad region.</h2>
     <p class="trust-note">Partner school logos coming soon.</p>
   </div>
 </section>

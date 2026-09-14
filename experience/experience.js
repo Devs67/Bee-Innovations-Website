@@ -21,6 +21,15 @@ import {
 } from "./tools.js";
 import { BRAND, WORD_COLOR } from "./brand.js";
 
+// Reaching this page at all — via the homepage's Launch gate, the nav link,
+// or a direct visit — counts as "seen the intro," so the homepage gate
+// never shows again on this browser regardless of how this page was reached.
+try {
+  localStorage.setItem("beeLaunched", "1");
+} catch (e) {
+  /* localStorage unavailable (privacy mode, etc.) — non-fatal */
+}
+
 // ----------------------------------------------------------------------------
 // Small math helpers
 // ----------------------------------------------------------------------------
