@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Any-Door Alarm: Build Guide — Bee Innovations</title>
+<link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="nav-wrap container">
+    <a class="brand" href="../index.html"><span class="brand-mark"></span>Bee Innovations</a>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="site-nav">
+      <a href="../index.html">Home</a>
+      <a href="../what-we-do/index.html">What We Do</a>
+      <a href="../curriculum/index.html" class="active">Curriculum</a>
+      <a href="../why-bee-innovations/index.html">Why Bee Innovations</a>
+      <a href="../for-schools/index.html">For Schools</a>
+      <a href="../contact/index.html">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<header class="project-banner">
+  <img src="../assets/img/any-door-alarm/banner.png" alt="Any-Door Alarm, Project 2: Electronics and Logic. Build an alarm that turns on when either door is opened: press Button 1 or Button 2 and the LED and buzzer turn on.">
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <span class="eyebrow">Curriculum / Grade 6 / Electronics & Robotics</span>
+    <h1>Any-Door Alarm: Build Guide</h1>
+    <p class="lead">In this project, you will build a two-button alarm using push buttons, a buzzer, an LED, a resistor, and a breadboard. Pressing either button completes the circuit, sounding the buzzer and lighting the LED.</p>
+  </div>
+</section>
+
+<div class="container">
+
+  <div class="color-key">
+    <span>🔴 Red jumper = +9V</span>
+    <span>🔵 Blue jumper = Alarm node / signal</span>
+    <span>⚫ Black jumper = GND</span>
+  </div>
+
+  <section class="build-step">
+    <div class="build-step-text">
+      <div class="build-step-title">
+        <span class="build-step-number">1</span>
+        <h2>Connecting the Battery to the Breadboard</h2>
+      </div>
+      <p>Connect the <strong>battery's positive (+) wire</strong> to the <strong>top power rail's + line</strong>, and the <strong>battery's negative (–) wire</strong> to the <strong>bottom power rail's + line</strong>; this rail is used as our ground for the whole build, as shown in the image. Every good alarm needs power before it can do anything dramatic.</p>
+    </div>
+    <div class="build-step-image">
+      <img src="../assets/img/any-door-alarm/step-1.png" alt="Connecting the battery's positive and negative wires to the breadboard power rails">
+    </div>
+  </section>
+
+  <section class="build-step reverse">
+    <div class="build-step-text">
+      <div class="build-step-title">
+        <span class="build-step-number">2</span>
+        <h2>Placing the Push Buttons</h2>
+      </div>
+      <p>Place <strong>two push buttons</strong> across the centre gap of the breadboard (<strong>Button 1</strong> in Columns 2 and 4, <strong>Button 2</strong> in Columns 6 and 8), leaving one column of space between them, as shown in the image. Meet your two "doors."</p>
+    </div>
+    <div class="build-step-image">
+      <img src="../assets/img/any-door-alarm/step-2.png" alt="Placing two push buttons across the centre gap of the breadboard">
+    </div>
+  </section>
+
+  <section class="build-step">
+    <div class="build-step-text">
+      <div class="build-step-title">
+        <span class="build-step-number">3</span>
+        <h2>Powering the Push Buttons</h2>
+      </div>
+      <p>Connect <strong>Button 1's left leg (Column 2)</strong> and <strong>Button 2's left leg (Column 6)</strong> to the <strong>top + rail</strong>, one red jumper wire each, as shown in the image. Both buttons are now armed and waiting: all they need is a finger.</p>
+    </div>
+    <div class="build-step-image">
+      <img src="../assets/img/any-door-alarm/step-3.png" alt="Powering both push buttons with red jumper wires to the top positive rail">
+    </div>
+  </section>
+
+  <section class="build-step reverse">
+    <div class="build-step-text">
+      <div class="build-step-title">
+        <span class="build-step-number">4</span>
+        <h2>Creating the Alarm Node</h2>
+      </div>
+      <p>Connect <strong>Button 1's right leg (Column 4)</strong> to <strong>Button 2's right leg (Column 8)</strong> with a blue jumper wire, as shown in the image; this joins the two buttons so that pressing <strong>either</strong> one, not both, sends power onward. Then run a second blue wire from <strong>Column 8</strong> up to <strong>Column 13</strong>, carrying that signal to the top half of the board. Consider this wire the "tattletale": whichever button gets pressed, it reports straight up the line.</p>
+    </div>
+    <div class="build-step-image">
+      <img src="../assets/img/any-door-alarm/step-4.png" alt="Creating the alarm node by joining both push buttons with blue jumper wires">
+    </div>
+  </section>
+
+  <section class="build-step">
+    <div class="build-step-text">
+      <div class="build-step-title">
+        <span class="build-step-number">5</span>
+        <h2>Placing the Buzzer</h2>
+      </div>
+      <p>Place the <strong>buzzer</strong> at the top-right of the breadboard, with its <strong>positive (+) leg in Column 25</strong> and its <strong>negative (–) leg in Column 29</strong>, as shown in the image. This is the loud one of the group: handle with (mild) caution.</p>
+    </div>
+    <div class="build-step-image">
+      <img src="../assets/img/any-door-alarm/step-5.png" alt="Placing the buzzer at the top-right of the breadboard">
+    </div>
+  </section>
+
+  <section class="build-step reverse">
+    <div class="build-step-text">
+      <div class="build-step-title">
+        <span class="build-step-number">6</span>
+        <h2>Grounding the Buzzer</h2>
+      </div>
+      <p>Connect the <strong>buzzer's negative (–) leg (Column 29)</strong> to the <strong>bottom ground rail</strong> with a black jumper wire, as shown in the image. Grounding the negative side first makes it clear that black always means "return path to the battery": no sound yet, we're just being responsible.</p>
+    </div>
+    <div class="build-step-image">
+      <img src="../assets/img/any-door-alarm/step-6.png" alt="Grounding the buzzer's negative leg with a black jumper wire">
+    </div>
+  </section>
+
+  <section class="build-step">
+    <div class="build-step-text">
+      <div class="build-step-title">
+        <span class="build-step-number">7</span>
+        <h2>Powering the Buzzer</h2>
+      </div>
+      <p>Connect <strong>Column 13 (the Alarm Node)</strong> to the <strong>buzzer's positive (+) leg (Column 25)</strong> with a blue jumper wire, as shown in the image. This completes the circuit: press either button, and the buzzer should sound. (If it doesn't, don't worry: even real alarms get tested a few times before opening night.)</p>
+    </div>
+    <div class="build-step-image">
+      <img src="../assets/img/any-door-alarm/step-7.png" alt="Powering the buzzer by connecting the alarm node to its positive leg">
+    </div>
+  </section>
+
+  <section class="build-step reverse">
+    <div class="build-step-text">
+      <div class="build-step-title">
+        <span class="build-step-number">8</span>
+        <h2>Adding the LED</h2>
+      </div>
+      <p>Place the <strong>LED</strong> so its <strong>longer leg (positive)</strong> sits in <strong>Column 13</strong> (the same node the buzzer already uses) and its <strong>shorter leg (negative)</strong>, next to the flat edge, sits in <strong>Column 14</strong>, as shown in the image. Your alarm is about to get a little more dramatic.</p>
+    </div>
+    <div class="build-step-image">
+      <img src="../assets/img/any-door-alarm/step-8.png" alt="Adding the LED with its longer leg in the alarm node column">
+    </div>
+  </section>
+
+  <section class="build-step">
+    <div class="build-step-text">
+      <div class="build-step-title">
+        <span class="build-step-number">9</span>
+        <h2>Adding the Resistor</h2>
+      </div>
+      <p>Place the <strong>resistor</strong> across the centre gap at <strong>Column 14</strong>, one lead in <strong>Row f</strong>, the other in <strong>Row e</strong>, as shown in the image. A resistor has no positive or negative side, so it can go in either way round: it's the bodyguard standing between your LED and too much current.</p>
+    </div>
+    <div class="build-step-image">
+      <img src="../assets/img/any-door-alarm/step-9.png" alt="Adding the resistor across the centre gap at Column 14">
+    </div>
+  </section>
+
+  <section class="build-step reverse">
+    <div class="build-step-text">
+      <div class="build-step-title">
+        <span class="build-step-number">10</span>
+        <h2>Grounding the LED</h2>
+      </div>
+      <p>Connect <strong>Column 14</strong> to the <strong>bottom ground rail</strong> with a black jumper wire, as shown in the image. This completes the LED's circuit: pressing either button now lights the LED and sounds the buzzer together.</p>
+    </div>
+    <div class="build-step-image">
+      <img src="../assets/img/any-door-alarm/step-10.png" alt="Grounding the LED by connecting Column 14 to the bottom ground rail">
+    </div>
+  </section>
+
+  <section class="build-closing">
+    <img src="../assets/img/any-door-alarm/final.png" alt="The completed Any-Door Alarm circuit on the breadboard">
+    <h2>You're Done!</h2>
+    <p>That's the full build. Go ahead: press Button 1, then Button 2, then try sneaking past with neither pressed. If light and sound show up right on cue, your Any-Door Alarm is officially open for business.</p>
+  </section>
+
+</div>
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand" href="../index.html"><span class="brand-mark"></span>Bee Innovations</a>
+      <p class="tagline">Create what you imagine.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Site</h4>
+      <a href="../what-we-do/index.html">What We Do</a>
+      <a href="../curriculum/index.html">Curriculum</a>
+      <a href="../why-bee-innovations/index.html">Why Bee Innovations</a>
+      <a href="../for-schools/index.html">For Schools</a>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <a href="../contact/index.html">Contact</a>
+      <a href="../for-schools/partner-with-us.html">Partner With Us</a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <p>&copy; 2026 Bee Innovations. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
