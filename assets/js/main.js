@@ -33,6 +33,22 @@ function initNavToggle() {
   }
 }
 
+function initNavDropdowns() {
+  const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+
+  document.querySelectorAll('.nav-item').forEach((item) => {
+    const parent = item.querySelector('.nav-parent');
+    if (!parent) return;
+
+    parent.addEventListener('click', (e) => {
+      if (!isMobile()) return;
+      e.preventDefault();
+      const open = item.classList.toggle('open');
+      parent.setAttribute('aria-expanded', String(open));
+    });
+  });
+}
+
 function initScrollProgress() {
   const bar = document.createElement('div');
   bar.className = 'scroll-progress';
@@ -85,6 +101,7 @@ function initFabStack(rootPrefix) {
 function initSearch(rootPrefix) {
   const navWrap = document.querySelector('.nav-wrap');
   const navToggle = document.querySelector('.nav-toggle');
+  const navActions = document.querySelector('.nav-actions');
   if (!navWrap || !navToggle) return;
 
   const trigger = document.createElement('button');
@@ -92,7 +109,7 @@ function initSearch(rootPrefix) {
   trigger.className = 'search-trigger';
   trigger.setAttribute('aria-label', 'Search the site');
   trigger.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="6"></circle><line x1="13.2" y1="13.2" x2="18" y2="18"></line></svg>';
-  navWrap.insertBefore(trigger, navToggle);
+  navWrap.insertBefore(trigger, navActions || navToggle);
 
   const overlay = document.createElement('div');
   overlay.className = 'search-overlay';
@@ -172,6 +189,7 @@ function initContactConfirm() {
 document.addEventListener('DOMContentLoaded', () => {
   const rootPrefix = getRootPrefix();
   initNavToggle();
+  initNavDropdowns();
   initScrollProgress();
   initFabStack(rootPrefix);
   initSearch(rootPrefix);

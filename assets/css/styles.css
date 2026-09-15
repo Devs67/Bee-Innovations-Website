@@ -158,16 +158,17 @@ p { margin: 0 0 1em; color: var(--text-muted); }
 
 .site-nav {
   display: flex;
-  gap: 2rem;
+  gap: 1.4rem;
 }
 
 .site-nav a {
   font-family: var(--font-head);
   font-weight: 600;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   color: var(--text-muted);
   padding: 0.4em 0;
   border-bottom: 2px solid transparent;
+  white-space: nowrap;
   transition: color 160ms var(--ease-out), border-color 160ms var(--ease-out);
 }
 
@@ -175,6 +176,95 @@ p { margin: 0 0 1em; color: var(--text-muted); }
 .site-nav a.active {
   color: var(--accent);
   border-color: var(--accent);
+}
+
+/* Dropdown nav items (What We Do / Curriculum / For Schools) */
+
+.nav-item { position: relative; }
+
+.nav-parent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+}
+
+.nav-caret {
+  width: 9px;
+  height: 9px;
+  flex: none;
+  transition: transform 160ms var(--ease-out);
+}
+
+.nav-item:hover .nav-caret,
+.nav-item:focus-within .nav-caret,
+.nav-item.open .nav-caret {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translate(-50%, -6px);
+  min-width: 248px;
+  padding: 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 20px 40px -18px rgba(20, 20, 43, 0.28);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 160ms var(--ease-out), transform 160ms var(--ease-out), visibility 0s linear 160ms;
+  z-index: 60;
+}
+
+.nav-item:hover .nav-dropdown,
+.nav-item:focus-within .nav-dropdown,
+.nav-item.open .nav-dropdown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+  transition: opacity 160ms var(--ease-out), transform 160ms var(--ease-out), visibility 0s linear 0s;
+}
+
+.nav-dropdown a {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  padding: 0.6em 0.7em;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.nav-dropdown a svg { width: 16px; height: 16px; flex: none; color: var(--accent); }
+
+.nav-dropdown a:hover,
+.nav-dropdown a.active {
+  background: var(--bg-alt);
+  color: var(--accent);
+}
+
+.nav-mobile-cta { display: none; }
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-cta {
+  padding: 0.6em 1.3em;
+  font-size: 0.78rem;
 }
 
 .nav-toggle {
@@ -1418,7 +1508,7 @@ body {
   .contact-grid { grid-template-columns: 1fr; }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1060px) {
   .nav-toggle { display: flex; }
 
   .site-nav {
@@ -1449,5 +1539,41 @@ body {
     border-bottom-color: var(--border);
   }
 
+  .nav-actions { display: none; }
+
+  .nav-item { border-bottom: 1px solid var(--border); }
+
+  .nav-parent {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .nav-dropdown {
+    position: static;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    background: var(--bg-alt);
+    max-height: 0;
+    overflow: hidden;
+    padding: 0 0 0 1rem;
+    transition: max-height 0.2s ease;
+  }
+
+  .nav-item.open .nav-dropdown { max-height: 260px; padding: 0.4rem 0 0.4rem 1rem; }
+
+  .nav-dropdown a { padding: 0.6em 0.75rem; white-space: normal; }
+
+  .nav-mobile-cta { display: block; padding: 1em 24px 0.5em; }
+
+  .nav-mobile-cta .button { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 768px) {
   .footer-grid { grid-template-columns: 1fr; }
 }
