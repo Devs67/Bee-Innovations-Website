@@ -286,8 +286,8 @@ h1.hero-headline {
    plain centered hero is untouched. */
 .hero.hero-split .container {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 2.5rem;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 2rem;
   align-items: center;
   text-align: left;
 }
@@ -304,7 +304,7 @@ h1.hero-headline {
 .hero-art svg,
 .hero-art video {
   width: 100%;
-  max-width: 380px;
+  max-width: 560px;
   height: auto;
   border-radius: var(--radius);
 }
@@ -315,7 +315,7 @@ h1.hero-headline {
   .hero.hero-split .button-group { justify-content: center; }
   .hero-art { order: -1; }
   .hero-art svg,
-  .hero-art video { max-width: 240px; }
+  .hero-art video { max-width: 340px; }
 }
 
 .page-hero {
@@ -375,46 +375,17 @@ h1.hero-headline {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
 }
 
-.zero-graphic .zg-num {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  font-family: var(--font-head);
-  font-weight: 800;
-  font-size: 1.05rem;
+.zero-graphic video {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  border-radius: var(--radius);
 }
 
-.zero-graphic .zg-zero {
-  border: 2px dashed var(--primary);
-  color: var(--primary-dark);
-  background: rgba(236, 72, 153, 0.08);
-}
-
-.zero-graphic .zg-one {
-  background: var(--border);
-  color: var(--text);
-}
-
-.zero-graphic .zg-ten {
-  width: 74px;
-  height: 74px;
-  font-size: 1.25rem;
-  background: var(--primary);
-  color: #ffffff;
-}
-
-.zero-graphic .zg-op {
-  font-family: var(--font-mono);
-  font-weight: 600;
-  font-size: 1.2rem;
-  color: var(--text-muted);
+@media (max-width: 860px) {
+  .zero-graphic video { max-width: 320px; }
 }
 
 /* Card grid */
