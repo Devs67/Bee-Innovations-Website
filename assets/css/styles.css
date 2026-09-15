@@ -892,7 +892,7 @@ h1.hero-headline {
 .hiw-row::before {
   content: '';
   position: absolute;
-  top: 55px;
+  top: 92px;
   left: 4%;
   right: 4%;
   border-top: 2px dashed var(--border);
@@ -903,18 +903,18 @@ h1.hero-headline {
 
 .hiw-step {
   --hiw-color: var(--accent);
-  --hiw-tint: #dbe9ff;
+  --hiw-tint: #e0f2fe;
   width: 230px;
   flex: none;
 }
 
-.hiw-step.accent-lime { --hiw-color: var(--lime-dark); --hiw-tint: #ddf0c4; }
-.hiw-step.accent-orange { --hiw-color: var(--orange-dark); --hiw-tint: #ffe1c7; }
+.hiw-step.accent-lime { --hiw-color: var(--lime-dark); --hiw-tint: #dcfce7; }
+.hiw-step.accent-orange { --hiw-color: var(--orange-dark); --hiw-tint: #ffedd5; }
 
 .hiw-icon-wrap {
   position: relative;
-  width: 108px;
-  height: 108px;
+  width: 136px;
+  height: 136px;
   margin-bottom: 1.25rem;
 }
 
@@ -927,16 +927,17 @@ h1.hero-headline {
   justify-content: center;
   background: var(--hiw-tint);
   color: var(--hiw-color);
+  overflow: visible;
 }
 
-.hiw-icon svg { width: 44px; height: 44px; }
+.hiw-icon svg { width: 108px; height: 108px; overflow: visible; }
 
 .hiw-badge {
   position: absolute;
-  top: -6px;
-  left: -6px;
-  width: 34px;
-  height: 34px;
+  top: -8px;
+  left: -8px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: var(--hiw-color);
   color: #ffffff;
@@ -945,11 +946,12 @@ h1.hero-headline {
   justify-content: center;
   font-family: var(--font-head);
   font-weight: 800;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   box-shadow: 0 6px 14px -6px rgba(20, 20, 43, 0.4);
+  z-index: 2;
 }
 
-.hiw-spark { position: absolute; top: -2px; right: -14px; color: var(--hiw-color); opacity: 0.6; }
+.hiw-spark { position: absolute; top: -6px; right: -16px; color: var(--hiw-color); opacity: 0.6; }
 .hiw-spark svg { width: 20px; height: 20px; }
 
 .hiw-step h3 { margin-bottom: 0.4em; font-size: 1.15rem; }
@@ -980,7 +982,7 @@ h1.hero-headline {
   align-items: center;
   width: 88px;
   flex: none;
-  padding-top: 34px;
+  padding-top: 68px;
 }
 
 .hiw-caption {
@@ -1010,12 +1012,12 @@ h1.hero-headline {
   align-items: center;
   width: 200px;
   flex: none;
-  padding-top: 6px;
+  padding-top: 28px;
 }
 
 .hiw-rocket {
-  width: 92px;
-  height: 92px;
+  width: 118px;
+  height: 118px;
   border-radius: 50%;
   background: #ffe3ef;
   color: var(--primary-dark);
@@ -1023,9 +1025,10 @@ h1.hero-headline {
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
+  overflow: visible;
 }
 
-.hiw-rocket svg { width: 40px; height: 40px; }
+.hiw-rocket svg { width: 92px; height: 92px; overflow: visible; }
 
 .hiw-final-pill {
   display: inline-flex;
