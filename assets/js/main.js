@@ -11,7 +11,6 @@ const SEARCH_INDEX = [
   { title: 'Our Story', section: 'Why Bee Innovations', path: 'why-bee-innovations/index.html#our-story', excerpt: 'Founded by Devendhar Bachhu, who came to education through engineering.' },
   { title: 'For Schools', section: 'For Schools', path: 'for-schools/index.html', excerpt: 'A partner, not just a vendor. Partnership and case studies.' },
   { title: 'Partner With Us', section: 'For Schools', path: 'for-schools/partner-with-us.html', excerpt: 'Built to run without us in the room. What is included, who this is for.' },
-  { title: 'Case Studies', section: 'For Schools', path: 'for-schools/case-studies.html', excerpt: 'Schools we have worked with, and what changed for their students.' },
   { title: 'Contact', section: 'Contact', path: 'contact/index.html', excerpt: 'Let us talk about your school. Based in Hyderabad, Telangana.' }
 ];
 
