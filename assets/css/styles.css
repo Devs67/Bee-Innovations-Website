@@ -158,35 +158,43 @@ p { margin: 0 0 1em; color: var(--text-muted); }
 
 .site-nav {
   display: flex;
-  gap: 1.4rem;
+  align-items: center;
+  gap: 0.25rem;
 }
 
-.site-nav a {
+.site-nav > a,
+.nav-parent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
   font-family: var(--font-head);
   font-weight: 600;
-  font-size: 0.88rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
-  padding: 0.4em 0;
-  border-bottom: 2px solid transparent;
+  padding: 0.5em 0.8em;
+  border-radius: 14px;
   white-space: nowrap;
-  transition: color 160ms var(--ease-out), border-color 160ms var(--ease-out);
+  transition: color 160ms var(--ease-out), background 160ms var(--ease-out);
 }
 
-.site-nav a:hover,
-.site-nav a.active {
+.nav-link-icon { width: 19px; height: 19px; flex: none; }
+
+.nav-label { display: inline-flex; align-items: center; gap: 0.3em; }
+
+.site-nav > a:hover,
+.site-nav > a.active,
+.nav-parent:hover,
+.nav-parent.active,
+.nav-item:focus-within .nav-parent,
+.nav-item.open .nav-parent {
   color: var(--accent);
-  border-color: var(--accent);
+  background: #eaf2ff;
 }
 
 /* Dropdown nav items (What We Do / Curriculum / For Schools) */
 
 .nav-item { position: relative; }
-
-.nav-parent {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35em;
-}
 
 .nav-caret {
   width: 9px;
@@ -203,9 +211,18 @@ p { margin: 0 0 1em; color: var(--text-muted); }
 
 .nav-dropdown {
   position: absolute;
-  top: calc(100% + 14px);
+  top: 100%;
   left: 50%;
   transform: translate(-50%, -6px);
+  padding-top: 14px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 160ms var(--ease-out), transform 160ms var(--ease-out), visibility 0s linear 160ms;
+  z-index: 60;
+}
+
+.nav-dropdown-card {
   min-width: 248px;
   padding: 0.5rem;
   background: var(--bg-card);
@@ -215,11 +232,6 @@ p { margin: 0 0 1em; color: var(--text-muted); }
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 160ms var(--ease-out), transform 160ms var(--ease-out), visibility 0s linear 160ms;
-  z-index: 60;
 }
 
 .nav-item:hover .nav-dropdown,
@@ -2036,10 +2048,26 @@ body {
     border-left: 2px solid transparent;
   }
 
+  .site-nav > a,
+  .nav-parent {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.85em;
+    border-radius: 0;
+    background: none !important;
+  }
+
+  .nav-label { flex: 1; }
+
+  .nav-parent .nav-caret { margin-left: auto; }
+
   .site-nav a.active,
-  .site-nav a:hover {
+  .site-nav a:hover,
+  .nav-parent.active,
+  .nav-parent:hover {
     border-left-color: var(--accent);
     border-bottom-color: var(--border);
+    color: var(--accent);
   }
 
   .nav-actions { display: none; }
@@ -2048,7 +2076,7 @@ body {
 
   .nav-parent {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     width: 100%;
   }
 
@@ -2069,6 +2097,16 @@ body {
   }
 
   .nav-item.open .nav-dropdown { max-height: 260px; padding: 0.4rem 0 0.4rem 1rem; }
+
+  .nav-dropdown-card {
+    min-width: 0;
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    gap: 0;
+  }
 
   .nav-dropdown a { padding: 0.6em 0.75rem; white-space: normal; }
 
