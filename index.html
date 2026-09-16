@@ -9,11 +9,10 @@
 </head>
 <body>
 
-<!-- Launch gate: hidden by default, revealed only for a first-time visitor
-     (checked synchronously below, before the rest of the page paints, so
-     there's no flash either way). Clicking Launch plays the 3D intro at
-     experience/index.html, which hands back to this page afterward. -->
-<div class="launch-gate" id="launchGate" hidden>
+<!-- Launch gate: shown on every visit (including reloads). Clicking Launch
+     plays the 3D intro at experience/index.html, which hands back to this
+     page afterward. -->
+<div class="launch-gate" id="launchGate">
   <div class="launch-gate-content">
     <span class="launch-gate-eyebrow">Bee Innovations</span>
     <h2 class="launch-gate-title">Ready to see an idea<br>become something real?</h2>
@@ -21,16 +20,10 @@
   </div>
 </div>
 <script>
-  (function () {
-    if (!localStorage.getItem('beeLaunched')) {
-      document.getElementById('launchGate').hidden = false;
-      document.documentElement.style.overflow = 'hidden';
-    }
-    document.getElementById('launchBtn').addEventListener('click', function () {
-      localStorage.setItem('beeLaunched', '1');
-      window.location.href = 'experience/index.html';
-    });
-  })();
+  document.documentElement.style.overflow = 'hidden';
+  document.getElementById('launchBtn').addEventListener('click', function () {
+    window.location.href = 'experience/index.html';
+  });
 </script>
 
 <header class="site-header">
