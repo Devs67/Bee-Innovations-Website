@@ -1910,6 +1910,8 @@ body {
     radial-gradient(ellipse at 50% 50%, #1b1b3a 0%, #0a0a18 68%, #050508 100%);
 }
 
+.launch-gate[hidden] { display: none; }
+
 .launch-gate::before {
   content: '';
   position: absolute;

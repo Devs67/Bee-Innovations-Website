@@ -9,9 +9,10 @@
 </head>
 <body>
 
-<!-- Launch gate: shown on every visit (including reloads). Clicking Launch
-     plays the 3D intro at experience/index.html, which hands back to this
-     page afterward. -->
+<!-- Launch gate: shown on every visit (including reloads), except when
+     arriving straight back from the 3D intro finishing or being skipped —
+     that hand-off should land on the real site, not loop into the gate
+     again. Clicking Launch plays the intro at experience/index.html. -->
 <div class="launch-gate" id="launchGate">
   <div class="launch-gate-content">
     <span class="launch-gate-eyebrow">Bee Innovations</span>
@@ -20,7 +21,13 @@
   </div>
 </div>
 <script>
-  document.documentElement.style.overflow = 'hidden';
+  (function () {
+    if (!/\/experience\//.test(document.referrer)) {
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.getElementById('launchGate').hidden = true;
+    }
+  })();
   document.getElementById('launchBtn').addEventListener('click', function () {
     window.location.href = 'experience/index.html';
   });
