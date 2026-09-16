@@ -100,6 +100,22 @@ function partialPoints(stroke, remaining) {
   return out;
 }
 
+/** Like partialPoints, but for an exact distance along the stroke (used to place a traveling pulse). */
+function pointAtDistance(stroke, dist) {
+  const { points, cumLens, total } = stroke;
+  const d = THREE.MathUtils.clamp(dist, 0, total);
+  for (let i = 1; i < points.length; i++) {
+    if (cumLens[i] >= d) {
+      const segLen = cumLens[i] - cumLens[i - 1];
+      const t = segLen > 0 ? (d - cumLens[i - 1]) / segLen : 0;
+      const a = points[i - 1];
+      const b = points[i];
+      return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+    }
+  }
+  return points[points.length - 1];
+}
+
 // ----------------------------------------------------------------------------
 // Shared: build a smooth 3D tube along a 2D point list (used by circuit + carved).
 // ----------------------------------------------------------------------------
@@ -243,6 +259,135 @@ export function buildStrokeText(word, style = "circuit", { scale = 0.09 } = {}) 
   }
 
   return { group, plank, width: prepared.width, update };
+}
+
+// ============================================================================
+// CREATE's own circuit-trace text — copper tube strokes that progressively
+// draw in, solder-style nodes that pop the instant their trace starts, and
+// tiny pulses of light travelling along whatever length is already drawn.
+// Kept separate from buildStrokeText's plain "circuit" style above (still
+// used nowhere else) so the richer per-letter behavior here can evolve
+// without touching the carved/printed/LED words.
+// ============================================================================
+
+const CIRCUIT_NODE_POP_DURATION = 0.35;
+const CIRCUIT_PULSE_SPEED = 0.9; // world units of trace length per second
+
+/** Step 1: lay out `word` as circuit-trace paths and build the (initially
+ *  empty) Three.js group + per-stroke node/pulse meshes for it. */
+export function createCircuitLetterPaths(word, { scale = 0.09 } = {}) {
+  const prepared = prepareWord(word, { scale, jitter: 0.5 });
+  const group = new THREE.Group();
+
+  const traceMat = new THREE.MeshStandardMaterial({
+    color: WORD_COLOR.arduino,
+    metalness: 0.55,
+    roughness: 0.3,
+    emissive: WORD_COLOR.arduino,
+    emissiveIntensity: 0.55,
+  });
+
+  const nodeGeo = new THREE.SphereGeometry(0.045, 8, 8);
+  const nodeMeshes = prepared.strokes.map(() => {
+    const mat = new THREE.MeshStandardMaterial({
+      color: WORD_COLOR.arduino,
+      emissive: WORD_COLOR.arduino,
+      emissiveIntensity: 1.4,
+    });
+    const node = new THREE.Mesh(nodeGeo, mat);
+    node.visible = false;
+    group.add(node);
+    return node;
+  });
+
+  const pulseGeo = new THREE.SphereGeometry(0.026, 6, 6);
+  const pulses = prepared.strokes.map(() => {
+    const mat = new THREE.MeshBasicMaterial({ color: 0xdfeeff, transparent: true, opacity: 0, toneMapped: false });
+    const mesh = new THREE.Mesh(pulseGeo, mat);
+    mesh.visible = false;
+    group.add(mesh);
+    return mesh;
+  });
+
+  return {
+    group,
+    prepared,
+    traceMat,
+    nodeMeshes,
+    pulses,
+    nodeActivatedAt: prepared.strokes.map(() => null),
+    traceMeshes: [],
+    width: prepared.width,
+  };
+}
+
+/** Step 2: called every frame — reveals traces up to `progress`, pops each
+ *  node the instant its trace starts, and drives a small pulse of light
+ *  along the already-completed length of each active trace. Returns the
+ *  current drawing tip (for cursor/spark FX), same shape as buildStrokeText. */
+export function animateCircuitText(letterPaths, progress, dt, elapsed = 0) {
+  const { group, prepared, traceMat, nodeMeshes, pulses, nodeActivatedAt, traceMeshes } = letterPaths;
+
+  traceMeshes.forEach((m) => group.remove(m));
+  traceMeshes.length = 0;
+
+  const target = THREE.MathUtils.clamp(progress, 0, 1) * prepared.totalBudget;
+  let consumed = 0;
+  let tip = null;
+
+  prepared.strokes.forEach((stroke, i) => {
+    const remaining = target - consumed;
+    let pts = null;
+    let revealedLen = 0;
+    if (remaining <= 0) {
+      // not reached yet
+    } else if (remaining >= stroke.total) {
+      pts = stroke.points;
+      revealedLen = stroke.total;
+    } else {
+      pts = partialPoints(stroke, remaining);
+      revealedLen = remaining;
+      tip = pts[pts.length - 1];
+    }
+    consumed += stroke.total + prepared.lift;
+
+    if (pts && pts.length >= 2) {
+      const geo = tubeFromPoints(pts, 0.03, 0.028);
+      if (geo) {
+        const mesh = new THREE.Mesh(geo, traceMat);
+        group.add(mesh);
+        traceMeshes.push(mesh);
+      }
+    }
+
+    const node = nodeMeshes[i];
+    if (revealedLen > 0) {
+      if (nodeActivatedAt[i] == null) nodeActivatedAt[i] = elapsed;
+      const t = THREE.MathUtils.clamp((elapsed - nodeActivatedAt[i]) / CIRCUIT_NODE_POP_DURATION, 0, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      node.visible = true;
+      node.position.set(stroke.points[0].x, stroke.points[0].y, 0.04);
+      node.scale.setScalar(1 + (1 - eased) * 0.9);
+      node.material.emissiveIntensity = 1.1 + (1 - eased) * 1.6;
+    } else {
+      nodeActivatedAt[i] = null;
+      node.visible = false;
+    }
+
+    const pulse = pulses[i];
+    if (revealedLen > 0.03) {
+      const phase = (elapsed * CIRCUIT_PULSE_SPEED) % revealedLen;
+      const p = pointAtDistance(stroke, phase);
+      pulse.position.set(p.x, p.y, 0.045);
+      pulse.visible = true;
+      const edgeFade = Math.min(phase, revealedLen - phase);
+      pulse.material.opacity = Math.min(1, edgeFade / 0.06) * 0.85;
+    } else {
+      pulse.visible = false;
+    }
+  });
+
+  return tip ? { x: tip.x, y: tip.y, active: progress < 1 } : { x: 0, y: 0, active: false };
 }
 
 // ----------------------------------------------------------------------------
