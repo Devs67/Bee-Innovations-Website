@@ -8,9 +8,8 @@
 
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { buildStrokeText, buildPrintedText, buildLEDText } from "./writing.js";
+import { buildStrokeText, buildPrintedText, buildLEDText, createCircuitLetterPaths, animateCircuitText } from "./writing.js";
 import {
-  createArduino,
   createMicrobit,
   createPrinter,
   createWoodworkingTool,
@@ -19,16 +18,8 @@ import {
   GlowDabPool,
   createBackdropTexture,
 } from "./tools.js";
+import { loadArduino, activateArduino, animateArduinoEntrance, animateArduinoExit } from "./arduino-hero.js";
 import { BRAND, WORD_COLOR } from "./brand.js";
-
-// Reaching this page at all — via the homepage's Launch gate, the nav link,
-// or a direct visit — counts as "seen the intro," so the homepage gate
-// never shows again on this browser regardless of how this page was reached.
-try {
-  localStorage.setItem("beeLaunched", "1");
-} catch (e) {
-  /* localStorage unavailable (privacy mode, etc.) — non-fatal */
-}
 
 // ----------------------------------------------------------------------------
 // Small math helpers
@@ -147,7 +138,23 @@ scene.add(phraseGroup);
 // Tools
 // ============================================================================
 
-const arduinoTool = createArduino();
+// The Arduino is the real production GLB (see arduino-hero.js), loaded async.
+// `group` exists immediately (empty) so it can be added to the scene and
+// manipulated by the shared timeline code below like every other tool; the
+// loaded model is parented into it once ready, and `ready` gates the parts
+// of the timeline that need the actual asset (see the arduinoReady guard in
+// animate() and the phase.key === "arduino" branches below).
+const arduinoTool = { group: new THREE.Group(), model: null, ready: false };
+const arduinoReady = loadArduino()
+  .then((model) => {
+    arduinoTool.model = model;
+    arduinoTool.group.add(model.root);
+    arduinoTool.ready = true;
+  })
+  .catch((err) => {
+    console.error("[experience] failed to load arduino-uno.glb", err);
+  });
+
 const microbitTool = createMicrobit();
 const printerTool = createPrinter();
 const woodTool = createWoodworkingTool();
@@ -247,8 +254,10 @@ function ensureWord(key) {
   const row = ROWS[key];
   const phase = PHASES.find((p) => p.key === key);
   let built;
-  if (phase.technique === "circuit") built = buildStrokeText(row.word, "circuit", { scale: 0.088 });
-  else if (phase.technique === "carved") built = buildStrokeText(row.word, "carved", { scale: 0.088 });
+  if (phase.technique === "circuit") {
+    const paths = createCircuitLetterPaths(row.word, { scale: 0.088 });
+    built = { group: paths.group, width: paths.width, update: (p, dt, elapsed) => animateCircuitText(paths, p, dt, elapsed) };
+  } else if (phase.technique === "carved") built = buildStrokeText(row.word, "carved", { scale: 0.088 });
   else if (phase.technique === "printed") built = buildPrintedText(row.word, { scale: 0.095 });
   else built = buildLEDText(row.word, { pixelSize: 0.12, gap: 0.045 });
 
@@ -307,6 +316,16 @@ function updateConstructionVisuals(dt) {
   if (activeKey !== phase.key) activatePhase(phase);
 
   const tool = TOOLS[phase.key];
+  const isArduino = phase.key === "arduino" && tool.ready;
+
+  // ARDUINO_ACTIVATE: a brief LED/circuit "power on" as it finishes settling
+  // into place, then a restrained ongoing pulse for as long as it's on
+  // screen — independent of which enter/write/pause/exit branch runs below.
+  if (isArduino) {
+    const activateP = THREE.MathUtils.clamp(inverseLerp(1.2, 2.3, seqTime), 0, 1);
+    activateArduino(tool.model, activateP, animClock);
+  }
+
   const base = performPos(phase.key);
   // x rotation must stay POSITIVE for arduino/microbit — their components
   // and LEDs sit at local +Y, and only a positive X-rotation tips that face
@@ -328,6 +347,7 @@ function updateConstructionVisuals(dt) {
     tool.group.position.set(lerp(sideFrom * OFFSCREEN_X, base[0], p), base[1] + Math.sin(p * Math.PI) * 0.25, base[2]);
     tool.group.rotation.set(rot[0], rot[1] + sideFrom * 0.8 * (1 - p), rot[2]);
     tool.group.scale.setScalar(lerp(scale * ENTRY_SCALE, scale, p));
+    if (isArduino) animateArduinoEntrance(tool.group, p);
     cameraPhase = { kind: "enter", rowY: ROWS[phase.key].y, sideSign: sideFrom };
   } else if (seqTime < phase.write[1]) {
     const woodX = phase.key === "woodworking" ? toolExtra.woodworking * 0.6 : 0;
@@ -336,24 +356,29 @@ function updateConstructionVisuals(dt) {
     tool.group.scale.setScalar(scale);
     const inst = ensureWord(phase.key);
     const p = inverseLerp(phase.write[0], phase.write[1], seqTime);
-    const tip = inst.update(p, dt);
+    const tip = inst.update(p, dt, animClock);
     driveWritingFX(phase.key, tip, dt);
-    cameraPhase = { kind: "row", rowY: ROWS[phase.key].y };
+    // CAMERA: gently move closer while CREATE is being constructed.
+    const pushIn = isArduino ? lerp(0, 0.6, easeInOutCubic(p)) : 0;
+    cameraPhase = { kind: "row", rowY: ROWS[phase.key].y, pushIn };
   } else if (seqTime < phase.pause[1]) {
     tool.group.position.set(base[0], base[1] + Math.sin(animClock * 1.1) * 0.03, base[2]);
     const inst = ensureWord(phase.key);
     if (!inst.finalized) {
-      inst.update(1, dt);
+      inst.update(1, dt, animClock);
       inst.finalized = true;
     }
     cursor.visible = false;
-    cameraPhase = { kind: "row", rowY: ROWS[phase.key].y };
+    // CAMERA: pull back once CREATE is complete.
+    const pushIn = isArduino ? lerp(0.6, 0, easeOutCubic(inverseLerp(phase.pause[0], phase.pause[1], seqTime))) : 0;
+    cameraPhase = { kind: "row", rowY: ROWS[phase.key].y, pushIn };
   } else {
     const p = easeInCubic(inverseLerp(phase.exit[0], phase.exit[1], seqTime));
     cursor.visible = false;
     tool.group.position.set(lerp(base[0], sideTo * OFFSCREEN_X, p), base[1] + Math.sin((1 - p) * Math.PI) * 0.18, base[2]);
     tool.group.rotation.y = rot[1] + sideTo * 0.6 * p;
     tool.group.scale.setScalar(lerp(scale, scale * ENTRY_SCALE, p));
+    if (isArduino) animateArduinoExit(tool.group, p);
     cameraPhase = { kind: "row", rowY: ROWS[phase.key].y };
   }
 }
@@ -397,7 +422,7 @@ function updateCamera(dt) {
   const look = new THREE.Vector3(0, 1.2, 0);
 
   if (cameraPhase.kind === "row") {
-    desired.set(0, cameraPhase.rowY - 0.15, 6.1);
+    desired.set(0, cameraPhase.rowY - 0.15, 6.1 - (cameraPhase.pushIn || 0));
     look.set(0, cameraPhase.rowY - 0.55, 0);
   } else if (cameraPhase.kind === "enter") {
     desired.set(cameraPhase.sideSign * 0.5, cameraPhase.rowY - 0.15, 6.4);
@@ -450,7 +475,7 @@ function updateBrandRise() {
     navigated = true;
     if (brandEl) brandEl.classList.add("is-leaving");
     setTimeout(() => {
-      window.location.href = "../index.html";
+      window.location.href = "../home.html";
     }, 700);
   }
 }
@@ -542,7 +567,10 @@ function animate() {
   const now = performance.now();
   const dt = Math.min((now - lastTime) / 1000, 0.05);
   lastTime = now;
-  const running = !paused;
+  // Hold the timeline at t=0 (clean backdrop, no title, Arduino off-screen)
+  // until the GLB has actually loaded, so the hero sequence never plays out
+  // an entrance/build for an asset that isn't there yet.
+  const running = !paused && arduinoTool.ready;
 
   if (running) {
     animClock += dt;
@@ -584,7 +612,9 @@ function animate() {
 requestAnimationFrame(animate);
 syncPauseButton();
 
-requestAnimationFrame(() => {
-  loadingEl.classList.add("is-hidden");
-  setTimeout(() => loadingEl.remove(), 700);
+arduinoReady.finally(() => {
+  requestAnimationFrame(() => {
+    loadingEl.classList.add("is-hidden");
+    setTimeout(() => loadingEl.remove(), 700);
+  });
 });

@@ -1,5 +1,5 @@
 const SEARCH_INDEX = [
-  { title: 'Home', section: 'Home', path: 'index.html', excerpt: 'Create what you imagine. Bee Innovations gives schools the curriculum, the lab, and the trained teacher.' },
+  { title: 'Home', section: 'Home', path: 'home.html', excerpt: 'Create what you imagine. Bee Innovations gives schools the curriculum, the lab, and the trained teacher.' },
   { title: 'What We Do', section: 'What We Do', path: 'what-we-do/index.html', excerpt: 'Curriculum, lab setup, and teacher training, working together.' },
   { title: 'Curriculum & Content', section: 'What We Do', path: 'what-we-do/curriculum-content.html', excerpt: 'A grade-by-grade skill ladder for Grades 1-9, simulator-first and free-tier-first.' },
   { title: 'Lab & Makerspace Setup', section: 'What We Do', path: 'what-we-do/lab-makerspace-setup.html', excerpt: 'From a single robotics corner to a full makerspace, including hardware sourcing via Blix.' },
